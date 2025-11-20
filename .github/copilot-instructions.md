@@ -5,6 +5,29 @@ applyTo: '**/*.java, **/*.ts, **/*.tsx, **/*.jsx'
 
 # Coding Conventions for Java Spring Boot + React Applications
 
+> **Note**: This file provides high-level guidelines. For detailed, comprehensive standards, refer to the instruction files below.
+
+## Instruction Files
+
+### Backend (Java Spring Boot)
+| File | Applies To | Description |
+| ------- | --------- | ----------- |
+| `.github/instructions/java-backend.instructions.md` | **/*.java, **/pom.xml, **/build.gradle | Core Java Spring Boot backend standards, REST API patterns, service layer, repository patterns, DTOs, and exception handling |
+| `.github/instructions/java-testing.instructions.md` | **/*Test.java, **/*IT.java, **/test/**/*.java | Java testing standards - Unit tests, integration tests, mocking, test data builders, and coverage |
+| `.github/instructions/java-security.instructions.md` | **/security/**/*.java, **/config/Security*.java | Security standards - JWT authentication, Spring Security, rate limiting, input validation |
+| `.github/instructions/java-database.instructions.md` | **/repository/**/*.java, **/entity/**/*.java, **/migration/**/*.sql | Database and JPA standards - Entity design, repository patterns, query optimization, transactions |
+| `.github/instructions/java-dev-environment.instructions.md` | **/application*.yml, **/config/**/*.java | Development environment - Configuration management, profiles, logging, monitoring, caching |
+
+### Frontend (React + TypeScript)
+| File | Applies To | Description |
+| ------- | --------- | ----------- |
+| `.github/instructions/react-frontend.instructions.md` | **/*.tsx, **/*.jsx, **/package.json | React frontend standards with Java Spring Boot integration, API client patterns, type-safe forms, hooks, and testing |
+| `.github/instructions/api.instructions.md` | **/api/**/*.ts, **/api/**/*.tsx | API layer patterns and request handling |
+| `.github/instructions/core.instructions.md` | **/*.ts, **/*.tsx, **/*.js, **/*.jsx | Core TypeScript and development standards - Non-negotiable rules |
+| `.github/instructions/react.instructions.md` | **/*.tsx, **/*.jsx | React component patterns and state management |
+| `.github/instructions/tanstack.instructions.md` | **/routes/**/*.tsx, **/routes/**/*.ts, **/*query*.ts | TanStack Router and Query patterns |
+| `.github/instructions/testing.instructions.md` | **/*.spec.ts, **/*.spec.tsx, **/*.test.ts, **/*.test.tsx | Vitest and Testing Library patterns |
+
 ## Java Spring Boot Backend Instructions
 
 - Write clear and concise comments only when necessary to explain complex logic or business rules.
