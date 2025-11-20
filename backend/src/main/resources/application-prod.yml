@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: WARN
+    com.company.todo: INFO
+    com.company.todo.repository: WARN
+
+cors:
+  allowed-origins: https://yourdomain.com

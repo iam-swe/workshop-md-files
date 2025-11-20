@@ -1,0 +1,17 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.company.todo: DEBUG
+    com.company.todo.repository: TRACE
+    org.springframework.web: DEBUG
+
+cors:
+  allowed-origins: http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173
