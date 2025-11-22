@@ -19,7 +19,7 @@ applyTo: '**/security/**/*.java, **/config/Security*.java, **/filter/**/*.java'
 ## Spring Security Configuration
 
 ```java
-// ✅ Good - Comprehensive security configuration
+// Good - Comprehensive security configuration
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
@@ -108,22 +108,22 @@ public class SecurityConfig {
     }
 }
 
-// ❌ Bad - Insecure configuration
+// Bad - Insecure configuration
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()  // ❌ CSRF disabled globally
+        http.csrf().disable()  // CSRF disabled globally
             .authorizeRequests()
-            .anyRequest().permitAll();  // ❌ Everything accessible
+            .anyRequest().permitAll();  // Everything accessible
         return http.build();
     }
     
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();  // ❌ No password encoding
+        return NoOpPasswordEncoder.getInstance();  // No password encoding
     }
 }
 ```
@@ -131,7 +131,7 @@ public class SecurityConfig {
 ## JWT Authentication
 
 ```java
-// ✅ Good - Secure JWT implementation
+// Good - Secure JWT implementation
 @Service
 @RequiredArgsConstructor
 public class JwtService {
@@ -266,17 +266,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 }
 
-// ❌ Bad - Insecure JWT implementation
+// Bad - Insecure JWT implementation
 @Service
 public class JwtService {
     
-    private String secretKey = "mySecretKey123";  // ❌ Hardcoded secret
+    private String secretKey = "mySecretKey123";  // Hardcoded secret
     
     public String generateToken(String username) {
         return Jwts.builder()
             .setSubject(username)
-            .signWith(SignatureAlgorithm.HS256, secretKey)  // ❌ Weak algorithm
-            .compact();  // ❌ No expiration
+            .signWith(SignatureAlgorithm.HS256, secretKey)  // Weak algorithm
+            .compact();  // No expiration
     }
     
     public String extractUsername(String token) {
@@ -284,7 +284,7 @@ public class JwtService {
             .setSigningKey(secretKey)
             .parseClaimsJws(token)
             .getBody()
-            .getSubject();  // ❌ No error handling
+            .getSubject();  // No error handling
     }
 }
 ```
@@ -292,7 +292,7 @@ public class JwtService {
 ## Authentication Service
 
 ```java
-// ✅ Good - Secure authentication service
+// Good - Secure authentication service
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -453,7 +453,7 @@ public class AuthenticationService {
     }
 }
 
-// ❌ Bad - Insecure authentication
+// Bad - Insecure authentication
 @Service
 public class AuthenticationService {
     
@@ -462,10 +462,10 @@ public class AuthenticationService {
     
     public User login(String email, String password) {
         User user = userRepository.findByEmail(email).orElse(null);
-        if (user != null && user.getPassword().equals(password)) {  // ❌ Plain text comparison
+        if (user != null && user.getPassword().equals(password)) {  // Plain text comparison
             return user;
         }
-        throw new RuntimeException("Invalid credentials");  // ❌ Reveals info about user existence
+        throw new RuntimeException("Invalid credentials");  // Reveals info about user existence
     }
 }
 ```
@@ -473,7 +473,7 @@ public class AuthenticationService {
 ## Rate Limiting
 
 ```java
-// ✅ Good - Rate limiting implementation
+// Good - Rate limiting implementation
 @Component
 @Slf4j
 public class RateLimitingFilter extends OncePerRequestFilter {
@@ -560,7 +560,7 @@ public class LoginAttemptService {
 ## Input Validation and Sanitization
 
 ```java
-// ✅ Good - Input validation
+// Good - Input validation
 @Component
 public class InputValidator {
     
@@ -606,7 +606,7 @@ public class InputValidator {
 ## Method-Level Security
 
 ```java
-// ✅ Good - Method-level security annotations
+// Good - Method-level security annotations
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -655,7 +655,7 @@ public class UserService {
 ## Sensitive Data Handling
 
 ```java
-// ✅ Good - Masking sensitive data in logs
+// Good - Masking sensitive data in logs
 @Aspect
 @Component
 @Slf4j
@@ -715,7 +715,7 @@ public class UserResponse {
 ## Security Headers
 
 ```java
-// ✅ Good - Security headers configuration
+// Good - Security headers configuration
 @Configuration
 public class SecurityHeadersConfig {
     
