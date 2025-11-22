@@ -60,7 +60,7 @@ src/
 ## Controller Layer Standards
 
 ```java
-// ✅ Good - Clean, RESTful controller
+// Good - Clean, RESTful controller
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
@@ -81,37 +81,23 @@ public class UserController {
         UserResponse response = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-    
-    @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(
-        @PathVariable @Positive Long id,
-        @Valid @RequestBody UpdateUserRequest request
-    ) {
-        return ResponseEntity.ok(userService.updateUser(id, request));
-    }
-    
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable @Positive Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
-    }
 }
 
-// ❌ Bad - Multiple issues
+// Bad - Multiple issues
 @RestController
 public class UserController {
     
-    @Autowired  // ❌ Field injection
+    @Autowired  // Field injection
     private UserService userService;
     
-    @GetMapping("/getUser")  // ❌ Verb in URL, no versioning
-    public User getUser(@PathVariable Long id) {  // ❌ Returns entity, no validation
-        return userService.findById(id).orElse(null);  // ❌ Returns null
+    @GetMapping("/getUser")  // Verb in URL, no versioning
+    public User getUser(@PathVariable Long id) {  // Returns entity, no validation
+        return userService.findById(id).orElse(null);  // Returns null
     }
     
-    @PostMapping("/user")  // ❌ No validation
+    @PostMapping("/user")  // No validation
     public User createUser(@RequestBody CreateUserRequest request) {
-        return userService.createUser(request);  // ❌ No proper status code
+        return userService.createUser(request);  // No proper status code
     }
 }
 ```
@@ -119,7 +105,7 @@ public class UserController {
 ## Service Layer Standards
 
 ```java
-// ✅ Good - Clean service with proper error handling
+// Good - Clean service with proper error handling
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -169,22 +155,22 @@ public class UserService {
     }
 }
 
-// ❌ Bad - Multiple issues
+// Bad - Multiple issues
 @Service
 public class UserService {
     
     @Autowired
     private UserRepository userRepository;
     
-    public User getUser(Long id) {  // ❌ Returns entity
-        return userRepository.findById(id).orElse(null);  // ❌ Returns null
+    public User getUser(Long id) {  // Returns entity
+        return userRepository.findById(id).orElse(null);  // Returns null
     }
     
-    public User createUser(CreateUserRequest request) {  // ❌ No validation
-        User user = new User();  // ❌ Manual mapping
+    public User createUser(CreateUserRequest request) {  // No validation
+        User user = new User();  // Manual mapping
         user.setEmail(request.getEmail());
         user.setName(request.getName());
-        return userRepository.save(user);  // ❌ No logging, returns entity
+        return userRepository.save(user);  // No logging, returns entity
     }
 }
 ```
@@ -192,7 +178,7 @@ public class UserService {
 ## Repository Layer Standards
 
 ```java
-// ✅ Good - Clean repository with custom queries
+// Good - Clean repository with custom queries
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     
@@ -211,12 +197,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findTopUsersByRole(String role, int limit);
 }
 
-// ❌ Bad
-public interface UserRepository extends CrudRepository<User, Long> {  // ❌ Use JpaRepository
+// Bad
+public interface UserRepository extends CrudRepository<User, Long> {  // Use JpaRepository
     
-    User findByEmail(String email);  // ❌ Should return Optional<User>
+    User findByEmail(String email);  // Should return Optional<User>
     
-    @Query("SELECT u FROM User u WHERE u.email = ?1")  // ❌ Unnecessary query
+    @Query("SELECT u FROM User u WHERE u.email = ?1")  // Unnecessary query
     User getByEmail(String email);
 }
 ```
@@ -224,7 +210,7 @@ public interface UserRepository extends CrudRepository<User, Long> {  // ❌ Use
 ## DTO Standards
 
 ```java
-// ✅ Good - Clean DTOs with validation
+// Good - Clean DTOs with validation
 @Data
 @Builder
 @NoArgsConstructor
@@ -259,9 +245,9 @@ public class UserResponse {
     private LocalDateTime updatedAt;
 }
 
-// ❌ Bad - No validation, mutable
+// Bad - No validation, mutable
 public class CreateUserRequest {
-    public String email;  // ❌ Public fields, no validation
+    public String email;  // Public fields, no validation
     public String name;
 }
 ```
@@ -269,7 +255,7 @@ public class CreateUserRequest {
 ## Entity Standards
 
 ```java
-// ✅ Good - Clean entity with proper relationships
+// Good - Clean entity with proper relationships
 @Entity
 @Table(name = "users", indexes = {
     @Index(name = "idx_email", columnList = "email", unique = true)
@@ -315,21 +301,21 @@ public class User {
     }
 }
 
-// ❌ Bad
+// Bad
 @Entity
 public class User {
     @Id
-    private Long id;  // ❌ No generation strategy
-    private String email;  // ❌ No constraints
+    private Long id;  // No generation strategy
+    private String email;  // No constraints
     private String name;
-    // ❌ No timestamps, no indexes
+    // No timestamps, no indexes
 }
 ```
 
 ## Exception Handling
 
 ```java
-// ✅ Good - Global exception handler
+// Good - Global exception handler
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -343,24 +329,6 @@ public class GlobalExceptionHandler {
             .timestamp(LocalDateTime.now())
             .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-    
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = ex.getBindingResult().getFieldErrors().stream()
-            .collect(Collectors.toMap(
-                FieldError::getField,
-                error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : "Invalid value"
-            ));
-        
-        ErrorResponse error = ErrorResponse.builder()
-            .status(HttpStatus.BAD_REQUEST.value())
-            .message("Validation failed")
-            .errors(errors)
-            .timestamp(LocalDateTime.now())
-            .build();
-        
-        return ResponseEntity.badRequest().body(error);
     }
     
     @ExceptionHandler(Exception.class)
@@ -390,7 +358,7 @@ public class UserNotFoundException extends RuntimeException {
 ## Configuration Standards
 
 ```yaml
-# application.yml - ✅ Good
+# application.yml - Good
 spring:
   application:
     name: user-service
@@ -433,7 +401,7 @@ server:
 ## Dependency Injection
 
 ```java
-// ✅ Good - Constructor injection
+// Good - Constructor injection
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -441,7 +409,7 @@ public class UserController {
     private final UserMapper userMapper;
 }
 
-// ✅ Good - Multiple implementations with @Qualifier
+// Good - Multiple implementations with @Qualifier
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
@@ -453,10 +421,10 @@ public class NotificationService {
     private final Notifier smsNotifier;
 }
 
-// ❌ Bad - Field injection
+// Bad - Field injection
 @RestController
 public class UserController {
-    @Autowired  // ❌ Don't use field injection
+    @Autowired  // Don't use field injection
     private UserService userService;
 }
 ```
@@ -464,7 +432,7 @@ public class UserController {
 ## Testing Standards
 
 ```java
-// ✅ Good - Unit test
+// Good - Unit test
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
     
@@ -530,7 +498,7 @@ class UserServiceTest {
     }
 }
 
-// ✅ Good - Integration test
+// Good - Integration test
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
@@ -563,7 +531,7 @@ class UserControllerIntegrationTest {
 ## Security Standards
 
 ```java
-// ✅ Good - Security configuration
+// Good - Security configuration
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -608,7 +576,7 @@ public class SecurityConfig {
 ## Logging Standards
 
 ```java
-// ✅ Good - Structured logging
+// Good - Structured logging
 @Slf4j
 @Service
 public class UserService {
