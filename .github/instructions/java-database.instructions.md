@@ -19,7 +19,7 @@ applyTo: '**/repository/**/*.java, **/entity/**/*.java, **/model/**/*.java, **/m
 ## Entity Design Standards
 
 ```java
-// ✅ Good - Well-designed entity with proper annotations
+// Good - Well-designed entity with proper annotations
 @Entity
 @Table(
     name = "users",
@@ -142,30 +142,30 @@ public class User {
     }
 }
 
-// ❌ Bad - Poorly designed entity
+// Bad - Poorly designed entity
 @Entity
-@Table(name = "users")  // ❌ No indexes
+@Table(name = "users")  // No indexes
 public class User {
     
     @Id
-    @GeneratedValue  // ❌ No strategy specified
+    @GeneratedValue  // No strategy specified
     private Long id;
     
-    private String email;  // ❌ No constraints
+    private String email;  // No constraints
     private String name;
-    private String password;  // ❌ Not hidden from JSON
+    private String password;  // Not hidden from JSON
     
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)  // ❌ Eager fetching
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)  // Eager fetching
     private List<Order> orders;
     
-    // ❌ No timestamps, no version control
+    // No timestamps, no version control
 }
 ```
 
 ## Repository Interface Standards
 
 ```java
-// ✅ Good - Well-designed repository with custom queries
+// Good - Well-designed repository with custom queries
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     
@@ -230,16 +230,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
     long countByStatusAndRole(@Param("status") UserStatus status, @Param("role") UserRole role);
 }
 
-// ❌ Bad - Poorly designed repository
+// Bad - Poorly designed repository
 @Repository
-public interface UserRepository extends CrudRepository<User, Long> {  // ❌ Use JpaRepository
+public interface UserRepository extends CrudRepository<User, Long> {  // Use JpaRepository
     
-    User findByEmail(String email);  // ❌ Should return Optional
+    User findByEmail(String email);  // Should return Optional
     
-    @Query("SELECT * FROM users WHERE email = ?1")  // ❌ Native query for simple case
+    @Query("SELECT * FROM users WHERE email = ?1")  // Native query for simple case
     User getByEmail(String email);
     
-    @Query("SELECT u FROM User u")  // ❌ Fetches all without pagination
+    @Query("SELECT u FROM User u")  // Fetches all without pagination
     List<User> getAllUsers();
 }
 ```
@@ -247,7 +247,7 @@ public interface UserRepository extends CrudRepository<User, Long> {  // ❌ Use
 ## Custom Repository Implementation
 
 ```java
-// ✅ Good - Custom repository for complex queries
+// Good - Custom repository for complex queries
 public interface UserRepositoryCustom {
     List<User> findUsersByComplexCriteria(UserSearchCriteria criteria);
     Page<User> searchUsersWithFilters(UserSearchCriteria criteria, Pageable pageable);
@@ -359,7 +359,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 ## Transaction Management
 
 ```java
-// ✅ Good - Proper transaction management
+// Good - Proper transaction management
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -429,19 +429,19 @@ public class UserService {
     }
 }
 
-// ❌ Bad - Poor transaction management
+// Bad - Poor transaction management
 @Service
 public class UserService {
     
     @Autowired
     private UserRepository userRepository;
     
-    // ❌ No @Transactional annotation
+    // No @Transactional annotation
     public void updateUser(User user) {
         userRepository.save(user);
     }
     
-    // ❌ Inappropriate isolation level
+    // Inappropriate isolation level
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -452,7 +452,7 @@ public class UserService {
 ## Database Migration (Flyway)
 
 ```sql
--- ✅ Good - V1__create_users_table.sql
+-- Good - V1__create_users_table.sql
 CREATE TABLE users (
     id BIGSERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
@@ -473,7 +473,7 @@ CREATE INDEX idx_user_email ON users(email);
 CREATE INDEX idx_user_status ON users(status);
 CREATE INDEX idx_user_created_at ON users(created_at);
 
--- ✅ Good - V2__add_user_department.sql
+-- Good - V2__add_user_department.sql
 ALTER TABLE users ADD COLUMN department_id BIGINT;
 
 ALTER TABLE users 
@@ -484,7 +484,7 @@ ALTER TABLE users
 
 CREATE INDEX idx_user_department ON users(department_id);
 
--- ✅ Good - V3__create_user_roles_junction.sql
+-- Good - V3__create_user_roles_junction.sql
 CREATE TABLE user_roles (
     user_id BIGINT NOT NULL,
     role_id BIGINT NOT NULL,
@@ -500,7 +500,7 @@ CREATE INDEX idx_user_role_role_id ON user_roles(role_id);
 ## Query Optimization
 
 ```java
-// ✅ Good - Optimized queries with projections
+// Good - Optimized queries with projections
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     
@@ -554,23 +554,23 @@ public class UserExportService {
     }
 }
 
-// ❌ Bad - Inefficient queries
+// Bad - Inefficient queries
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     
-    // ❌ Returns full entities when only summary needed
+    // Returns full entities when only summary needed
     List<User> findAll();
     
-    // ❌ No pagination
+    // No pagination
     @Query("SELECT u FROM User u JOIN u.orders o")
-    List<User> findUsersWithOrders();  // ❌ N+1 problem
+    List<User> findUsersWithOrders();  // N+1 problem
 }
 ```
 
 ## Auditing Configuration
 
 ```java
-// ✅ Good - JPA Auditing configuration
+// Good - JPA Auditing configuration
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 public class JpaAuditingConfig {
@@ -630,7 +630,7 @@ public class User extends AuditableEntity {
 ## Connection Pool Configuration
 
 ```yaml
-# ✅ Good - application.yml with optimized connection pool
+# Good - application.yml with optimized connection pool
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/mydb
