@@ -19,7 +19,7 @@ applyTo: '**/application*.yml, **/application*.properties, **/config/**/*.java, 
 ## Application Configuration Structure
 
 ```yaml
-# ✅ Good - application.yml (Base configuration)
+# Good - application.yml (Base configuration)
 spring:
   application:
     name: user-service
@@ -76,7 +76,7 @@ logging:
 ```
 
 ```yaml
-# ✅ Good - application-dev.yml (Development profile)
+# Good - application-dev.yml (Development profile)
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/userdb_dev
@@ -113,7 +113,7 @@ server:
 ```
 
 ```yaml
-# ✅ Good - application-prod.yml (Production profile)
+# Good - application-prod.yml (Production profile)
 spring:
   datasource:
     url: ${DB_URL}
@@ -157,7 +157,7 @@ server:
 ```
 
 ```yaml
-# ✅ Good - application-test.yml (Test profile)
+# Good - application-test.yml (Test profile)
 spring:
   datasource:
     url: jdbc:h2:mem:testdb
@@ -184,7 +184,7 @@ logging:
 ## Type-Safe Configuration Properties
 
 ```java
-// ✅ Good - Type-safe configuration with validation
+// Good - Type-safe configuration with validation
 @Configuration
 @ConfigurationProperties(prefix = "app")
 @Validated
@@ -305,7 +305,7 @@ app:
 ## Environment Variables
 
 ```bash
-# ✅ Good - .env.example (Template for developers)
+# Good - .env.example (Template for developers)
 # Database Configuration
 DB_URL=jdbc:postgresql://localhost:5432/userdb
 DB_USERNAME=your_username
@@ -332,13 +332,13 @@ LOG_LEVEL=DEBUG
 SERVER_PORT=8080
 CORS_ORIGINS=http://localhost:3000,http://localhost:5173
 
-# ❌ NEVER commit .env with actual values
+# NEVER commit .env with actual values
 ```
 
 ## Logging Standards
 
 ```java
-// ✅ Good - Structured logging with SLF4J
+// Good - Structured logging with SLF4J
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -392,21 +392,21 @@ public class UserService {
     }
 }
 
-// ❌ Bad - Poor logging practices
+// Bad - Poor logging practices
 @Service
 public class UserService {
     
     public User createUser(CreateUserRequest request) {
-        System.out.println("Creating user");  // ❌ Use logger
+        System.out.println("Creating user");  // Use logger
         
         User user = new User();
-        user.setPassword(request.getPassword());  // ❌ Logging sensitive data
-        System.out.println("User: " + user);  // ❌ String concatenation, exposes data
+        user.setPassword(request.getPassword());  // Logging sensitive data
+        System.out.println("User: " + user);  // String concatenation, exposes data
         
         try {
             return userRepository.save(user);
         } catch (Exception e) {
-            e.printStackTrace();  // ❌ Use logger
+            e.printStackTrace();  // Use logger
         }
         
         return null;
@@ -417,7 +417,7 @@ public class UserService {
 ## Custom Logging Configuration
 
 ```java
-// ✅ Good - Logback configuration (logback-spring.xml)
+// Good - Logback configuration (logback-spring.xml)
 ```
 
 ```xml
@@ -483,7 +483,7 @@ public class UserService {
 ## Actuator Endpoints Configuration
 
 ```java
-// ✅ Good - Custom health indicator
+// Good - Custom health indicator
 @Component
 public class DatabaseHealthIndicator implements HealthIndicator {
     
@@ -531,7 +531,7 @@ public class CustomInfoContributor implements InfoContributor {
 ## Exception Handling Configuration
 
 ```java
-// ✅ Good - Global exception handler with proper logging
+// Good - Global exception handler with proper logging
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -607,7 +607,7 @@ public class GlobalExceptionHandler {
 ## Performance Monitoring
 
 ```java
-// ✅ Good - Performance monitoring with Micrometer
+// Good - Performance monitoring with Micrometer
 @Configuration
 public class MetricsConfig {
     
@@ -649,7 +649,7 @@ public class UserService {
 ## Caching Configuration
 
 ```java
-// ✅ Good - Cache configuration
+// Good - Cache configuration
 @Configuration
 @EnableCaching
 public class CacheConfig {
