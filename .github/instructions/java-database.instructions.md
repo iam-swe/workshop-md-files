@@ -1,4 +1,3 @@
-````instructions
 ---
 description: 'Java Spring Boot database and JPA standards - Repository patterns, query optimization, and data access'
 applyTo: '**/repository/**/*.java, **/entity/**/*.java, **/model/**/*.java, **/migration/**/*.sql'

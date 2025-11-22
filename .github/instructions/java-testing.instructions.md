@@ -1,4 +1,3 @@
-````instructions
 ---
 description: 'Java Spring Boot testing standards - Unit, Integration, and E2E testing'
 applyTo: '**/*Test.java, **/*IT.java, **/test/**/*.java'

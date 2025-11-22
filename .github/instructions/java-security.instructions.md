@@ -1,4 +1,3 @@
-````instructions
 ---
 description: 'Java Spring Boot security standards - Authentication, Authorization, and Security best practices'
 applyTo: '**/security/**/*.java, **/config/Security*.java, **/filter/**/*.java'

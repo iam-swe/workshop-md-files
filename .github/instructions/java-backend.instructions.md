@@ -1,4 +1,3 @@
-````instructions
 ---
 description: 'Java Spring Boot backend development standards and best practices'
 applyTo: '**/*.java, **/pom.xml, **/application.yml, **/application.properties'

@@ -1,4 +1,3 @@
-````instructions
 ---
 description: 'Java Spring Boot development environment standards - Configuration, profiles, logging, and monitoring'
 applyTo: '**/application*.yml, **/application*.properties, **/config/**/*.java, **/logging/**/*.java'

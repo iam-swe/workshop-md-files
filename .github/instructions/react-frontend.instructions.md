@@ -1,4 +1,3 @@
-````instructions
 ---
 description: 'React frontend development standards for Java Spring Boot integration'
 applyTo: '**/*.tsx, **/*.jsx, **/package.json, **/*.css, **/*.scss'
